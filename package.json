@@ -1,0 +1,13 @@
+{
+  "name": "mi-plan-biblico",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve . -l 4173",
+    "build": "node scripts/build.mjs",
+    "preview": "npx serve dist -l 4173",
+    "check": "node scripts/check.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
