@@ -45,7 +45,9 @@ jobs:
           pnpm exec cap sync android
       - name: Construir APK
         working-directory: android
-        run: ./gradlew assembleDebug
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
       - name: Guardar APK descargable
         uses: actions/upload-artifact@v4
         with:
