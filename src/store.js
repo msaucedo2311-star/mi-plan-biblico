@@ -1,11 +1,18 @@
 const KEY = 'mi-plan-biblico:v2';
 const defaults = {
   completed: {}, reflections: {}, journal: [], questions: [],
-  settings: { doctrine: 'Bautista conservador', showAlternatives: true, reminder: true, reminderTime: '07:30', startDate: new Date().toISOString().slice(0,10), apiBase: '' }
+  settings: { doctrine: 'Bautista conservador', showAlternatives: true, reminder: true, reminderTime: '07:30', startDate: new Date().toISOString().slice(0,10), apiBase: '', deviceId: '' }
 };
 
 export function loadState() {
-  try { return merge(defaults, JSON.parse(localStorage.getItem(KEY) || '{}')); }
+  try {
+    const state = merge(defaults, JSON.parse(localStorage.getItem(KEY) || '{}'));
+    if (!state.settings.deviceId) {
+      state.settings.deviceId = globalThis.crypto?.randomUUID?.() || `device-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem(KEY, JSON.stringify(state));
+    }
+    return state;
+  }
   catch { return structuredClone(defaults); }
 }
 function merge(base, saved) {
