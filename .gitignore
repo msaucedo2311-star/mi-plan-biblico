@@ -3,3 +3,13 @@ node_modules/
 .DS_Store
 Thumbs.db
 *.log
+android/.gradle/
+android/.idea/
+android/app/build/
+android/build/
+*.jks
+*.keystore
+backend/.dev.vars
+.env
+.env.*
+!.env.example

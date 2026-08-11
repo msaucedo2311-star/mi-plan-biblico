@@ -2,6 +2,16 @@
 
 PWA móvil de estudio bíblico de 12 semanas. Funciona sin conexión después de la primera visita, guarda el avance localmente y está preparada para incorporar sincronización e IA mediante un backend seguro.
 
+## Estado actual
+
+El proyecto ya tiene tres piezas:
+
+1. **PWA web** publicada con GitHub Pages.
+2. **Aplicación Android nativa** generada en `android/` con Capacitor 8, icono, splash y notificaciones locales.
+3. **Backend seguro de Rock** en `backend/`, listo para desplegar como Cloudflare Worker con la clave de OpenAI guardada como secreto.
+
+Consulta [MOBILE.md](MOBILE.md) para obtener el APK de prueba y [backend/README.md](backend/README.md) para conectar la IA.
+
 ## Qué incluye
 
 - Plan completo de 12 semanas y 84 lecturas.
@@ -82,7 +92,7 @@ Respuesta esperada:
 }
 ```
 
-La carpeta `server/` contiene un contrato y un ejemplo deliberadamente independiente de proveedor. En producción, el proxy debe:
+La carpeta `backend/` contiene una implementación ejecutable como Cloudflare Worker. Usa la Responses API de OpenAI, mantiene la clave en un secreto del servidor, valida las solicitudes y restringe CORS. La carpeta `server/` conserva el contrato independiente de proveedor. En producción, el proxy debe:
 
 1. autenticar al usuario si hay cuentas;
 2. validar longitud y forma de la petición;
@@ -125,28 +135,17 @@ El estado actual vive bajo la clave `mi-plan-biblico:v2` de `localStorage`. El m
 5. resuelve conflictos por registro, no sobrescribiendo todo el documento;
 6. cifra transporte con HTTPS y ofrece exportación/borrado de cuenta.
 
-## Empaquetar después con Capacitor
+## Aplicación Android con Capacitor
 
-Cuando la PWA esté estable:
-
-```bash
-npm install @capacitor/core @capacitor/cli
-npx cap init "Mi Plan Bíblico" "com.tudominio.miplanbiblico" --web-dir=dist
-npm install @capacitor/android @capacitor/ios
-npm run build
-npx cap add android
-npx cap add ios
-npx cap sync
-```
-
-Después abre el proyecto nativo:
+El proyecto Android ya fue generado. Para actualizarlo después de cambiar la web:
 
 ```bash
-npx cap open android
-npx cap open ios
+pnpm install
+pnpm run mobile:sync
+pnpm run mobile:open:android
 ```
 
-Android requiere Android Studio/JDK. iOS requiere macOS, Xcode y una cuenta de Apple Developer. Antes de publicar hay que añadir iconos PNG en los tamaños requeridos, pantalla de inicio, política de privacidad, firma, identificadores definitivos, pruebas de notificaciones, borrado de cuenta si existe autenticación y declaraciones de tratamiento de datos de cada tienda.
+También existe una acción manual en GitHub que genera un APK de desarrollo descargable sin instalar Android Studio. Android local requiere Android Studio/JDK. iOS requiere macOS, Xcode y una cuenta de Apple Developer. Antes de publicar en tiendas hay que crear una firma de producción, política de privacidad, capturas, ficha de tienda, borrado de cuenta si existe autenticación y declaraciones de tratamiento de datos.
 
 ## Estructura
 
@@ -161,6 +160,10 @@ Android requiere Android Studio/JDK. iOS requiere macOS, Xcode y una cuenta de A
 │   ├── data.js               Plan, versículos y fuentes demostrativas
 │   ├── store.js              Persistencia y respaldos
 │   └── api.js                Cliente seguro para el proxy de IA
+├── backend/                  Cloudflare Worker para Rock/OpenAI
+├── android/                  Aplicación Android nativa Capacitor
+├── capacitor.config.json     Identidad y configuración móvil
+├── MOBILE.md                 APK, Android Studio e iOS
 ├── server/
 │   └── README.md             Contrato de backend
 ├── scripts/                  Validación y construcción

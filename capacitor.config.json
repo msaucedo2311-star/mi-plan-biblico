@@ -1,0 +1,12 @@
+{
+  "appId": "com.miplanbiblico.app",
+  "appName": "Mi Plan Bíblico",
+  "webDir": "dist",
+  "backgroundColor": "#f7f4ec",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

@@ -7,7 +7,20 @@
     "dev": "npx serve . -l 4173",
     "build": "node scripts/build.mjs",
     "preview": "npx serve dist -l 4173",
-    "check": "node scripts/check.mjs"
+    "check": "node scripts/check.mjs",
+    "mobile:add:android": "npm run build && cap add android",
+    "mobile:sync": "npm run build && cap sync android",
+    "mobile:open:android": "cap open android",
+    "mobile:apk": "npm run mobile:sync && cd android && gradlew.bat assembleDebug"
   },
-  "engines": { "node": ">=18" }
+  "dependencies": {
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/local-notifications": "^8.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0"
+  },
+  "engines": { "node": ">=22" },
+  "packageManager": "pnpm@11.16.0"
 }
