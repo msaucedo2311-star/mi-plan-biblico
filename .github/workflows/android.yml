@@ -1,0 +1,55 @@
+name: Construir aplicación Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "android/**"
+      - "src/**"
+      - "icons/**"
+      - "index.html"
+      - "styles.css"
+      - "calendar.css"
+      - "capacitor.config.json"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/android.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    name: APK instalable de prueba
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11.16.0
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: gradle
+      - name: Instalar dependencias
+        run: pnpm install --frozen-lockfile
+      - name: Validar y sincronizar Android
+        run: |
+          pnpm run check
+          pnpm run build
+          pnpm exec cap sync android
+      - name: Construir APK
+        working-directory: android
+        run: ./gradlew assembleDebug
+      - name: Guardar APK descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: mi-plan-biblico-android
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
